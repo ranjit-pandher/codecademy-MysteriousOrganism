@@ -1,17 +1,17 @@
 // Returns a random DNA base
 const returnRandBase = () => {
-  const dnaBases = ['A', 'T', 'C', 'G']
-  return dnaBases[Math.floor(Math.random() * 4)] 
-}
+  const dnaBases = ['A', 'T', 'C', 'G'];
+  return dnaBases[Math.floor(Math.random() * 4)];
+};
 
 // Returns a random single stand of DNA containing 15 bases
 const mockUpStrand = () => {
-  const newStrand = []
+  const newStrand = [];
   for (let i = 0; i < 15; i++) {
-    newStrand.push(returnRandBase())
+    newStrand.push(returnRandBase());
   }
-  return newStrand
-}
+  return newStrand;
+};
 
 function pAequorFactory(number, dnaArray) {
   return {
@@ -25,27 +25,39 @@ function pAequorFactory(number, dnaArray) {
       //remove selected base from dna bases to avoid repeating
       dnaBases.splice(dnaBases.indexOf(mutatedDNA[randomDNAIndex]), 1);
       //replace the selected base with the new base
-      mutatedDNA[randomDNAIndex] = dnaBases[Math.floor(Math.random() * dnaBases.length)];
+      mutatedDNA[randomDNAIndex] =
+        dnaBases[Math.floor(Math.random() * dnaBases.length)];
 
       return mutatedDNA;
-
     },
     compareDNA(pAequor) {
-      let isSame = 0;
-      const compareOne = this;
-      const compareTwo = pAequor;
+      let identicalBases = 0;
+      let totalBases = 0;
+      let percentSimilar = 0;
 
-      for(let i = 0; i < this.dna.length; i++){
-          if(compareOne.dna[i] === compareTwo.dna[i]){
-            isSame += 1;
+      if (pAequor.dna.length === this.dna.length) {
+        totalBases = this.dna.length;
+        for (let i = 0; i < pAequor.dna.length; i++) {
+          if (pAequor.dna[i] === this.dna[i]) {
+            identicalBases += 1;
+          }
         }
+
+        percentSimilar = (identicalBases / totalBases) * 100;
+
+        console.log(
+          `Speciman #${this.specimenNum} and specimen #${
+            pAequor.specimenNum
+          } have ${percentSimilar.toFixed(2)}% DNA in common` + '.'
+        );
+      } else {
+        return;
       }
     },
-  }
+  };
 }
 
-//testing factory function
-const newA = pAequorFactory(1, mockUpStrand());
-console.log(newA.dna);
-console.log(newA.mutate());
+const madman = pAequorFactory(8, mockUpStrand());
+const hitter = pAequorFactory(9, mockUpStrand());
 
+madman.compareDNA(hitter);
