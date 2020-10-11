@@ -17,6 +17,7 @@ function pAequorFactory(number, dnaArray) {
   return {
     specimenNum: number,
     dna: dnaArray,
+
     mutate() {
       let mutatedDNA = this.dna;
       const dnaBases = ['A', 'T', 'C', 'G'];
@@ -30,20 +31,19 @@ function pAequorFactory(number, dnaArray) {
 
       return mutatedDNA;
     },
+
     compareDNA(pAequor) {
-      let identicalBases = 0;
-      let totalBases = 0;
-      let percentSimilar = 0;
+      let identicalBases = 0,
+        percentSimilar = 0;
 
       if (pAequor.dna.length === this.dna.length) {
-        totalBases = this.dna.length;
         for (let i = 0; i < pAequor.dna.length; i++) {
           if (pAequor.dna[i] === this.dna[i]) {
             identicalBases += 1;
           }
         }
 
-        percentSimilar = (identicalBases / totalBases) * 100;
+        percentSimilar = (identicalBases / this.dna.length) * 100;
 
         console.log(
           `Speciman #${this.specimenNum} and specimen #${
@@ -54,10 +54,37 @@ function pAequorFactory(number, dnaArray) {
         return;
       }
     },
+
+    willLikelySurvive() {
+      let survivalBases = 0;
+
+      this.dna.forEach((e) => {
+        if (e === 'C' || e === 'G') {
+          survivalBases += 1;
+        }
+      });
+
+      let survivalRate = (survivalBases / this.dna.length) * 100;
+
+      if (survivalRate >= 60) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   };
 }
 
-const madman = pAequorFactory(8, mockUpStrand());
-const hitter = pAequorFactory(9, mockUpStrand());
+const pAequorArray = [];
+let i = 1;
 
-madman.compareDNA(hitter);
+do {
+  let pAequorSample = pAequorFactory(i, mockUpStrand());
+
+  if (pAequorSample.willLikelySurvive() === true) {
+    pAequorArray.push(pAequorSample);
+  }
+  i++;
+} while (pAequorArray.length <= 29);
+
+console.log(pAequorArray);
